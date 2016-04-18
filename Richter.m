@@ -46,7 +46,7 @@ w2 = 3.54;
 bmin = rmax+((rmin-rmax)/(1+((T/r1)^r2)));
 b1 = smax+((smin-smax)/(1+((T/s1)^s2)));
 b3 = wmax+((wmin-wmax)/(1+((T/w1)^w2)));
-Brel = bmin+((bmax-bmin)/(1+((n+(p/b1))^b2)+((n+(p/b3))^b4)));
+Brel = bmin+((bmax-bmin)./(1+((n+(p./b1)).^b2)+((n+(p./b3)).^b4)));
 
 Blow = B_coefficient(T);
 N0eeh = 3.3e17; %cm^-3 
@@ -55,6 +55,6 @@ N0ehh = 7e17; %cm^-3
 geeh = 1+13*(1-tanh((n0/N0eeh)^0.66));
 gehh = 1+7.5*(1-tanh((p0/N0ehh)^0.63));
 
-tau_intr = delta/(((n*p)-(nieff^2))*(((2.5e-31)*geeh*n0)+((8.5e-32)*gehh*p0)+((3e-29)*(delta^0.92))+(Brel*Blow)));
+tau_intr = delta./(((n*p)-(nieff^2)).*(((2.5e-31)*geeh*n0)+((8.5e-32)*gehh*p0)+((3e-29).*(delta.^0.92))+(Brel*Blow)));
 
 end
