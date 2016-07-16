@@ -33,20 +33,30 @@ m0 = 9.109e-31; %kg
 k_B = 1.3806488e-23; %J/K
 
 %Calculate electron effective mass relative to electron rest mass
-mem0 = (6^(2/3))*((((C*(Eg0/Eg))^2)*mlm0)^(1/3)); %dimensionless
+% mem0 = (6^(2/3))*((((C*(Eg0/Eg))^2)*mlm0)^(1/3)); %dimensionless
+%Ref for the below calculations is Green JAP 1990
+ml = 0.9163*m0;
+mtm0 = 0.1905*(Eg0/Eg); 
+mt = mtm0*m0; 
+delta = (ml-mt)/ml; 
+me  = 4*ml/((1+(((ml/mt)^(1/2))*(asin(delta)/delta)))^2);
 
 %Calculate hole effective mass relative to electron rest mass
 mhm0 = ((a+(b*T)+(c*(T^2))+(d*(T^3))+(e*(T^4)))/(1+(f*T)+(g*(T^2))+(h*(T^3))+(i*(T^4))))^(2/3); %dimensionless
 
 %Calculate effective masses of electrons and holes
-me = mem0*m0; %kg
+% me = mem0*m0; %kg
 mh = mhm0*m0; %kg
 
-vth_e = sqrt((3*k_B*T)/(me)); %m/s, Ref Gang Chen, Nanoscale energy transport and conversion, pg. 214
-vth_h = sqrt((3*k_B*T)/(mh)); %m/s, Ref Gang Chen, Nanoscale energy transport and conversion, pg. 214
-
+% vth_e = sqrt((3*k_B*T)/(me)); %m/s, Ref Gang Chen, Nanoscale energy transport and conversion, pg. 214
+% vth_h = sqrt((3*k_B*T)/(mh)); %m/s, Ref Gang Chen, Nanoscale energy transport and conversion, pg. 214
+% 
+vth_e = sqrt((8*k_B*T)/(pi*me)); %m/s, Ref Green JAP 1990 equation 10
+vth_h = sqrt((8*k_B*T)/(pi*mh)); %m/s, Ref Green JAP 1990 equation 10
 %Convert to cm/s
 vth_e = vth_e*100; %cm/s
 vth_h = vth_h*100; %cm/s
+
+
 
 end
