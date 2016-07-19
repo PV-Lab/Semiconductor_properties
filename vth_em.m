@@ -2,28 +2,14 @@
 %This function takes as input the silicon sample temperature and calculates
 %the thermal velocity for both electrons and holes at the specified
 %temperature. This is based on the effective mass of either the electron or
-%hole. Reference: Sze (Physics of Semiconductor Devices), pg 29. The
-%formulas for electron and hole effective masses are taken from Rein pg.
-%23. Outputs are thermal velocities in cm/s. 
+%hole. Reference: Green JAP 1990 and Sze (Physics of Semiconductor Devices), pg 29. The
+%formulas for electron and hole effective masses are partially taken from Rein pg.
+%23 (original reference Green JAP 1990). Outputs are thermal velocities in cm/s. 
 
 function [vth_e,vth_h] = vth_em(T)
 
-%Coefficients per Rein, pg. 23
-N = 2.541e19; %cm^-3
-C = 0.1905; %dimensionless
-mlm0 = 0.9163; %dimensionless
-a = 0.4435870; 
-b = 0.3609528e-2;
-c = 0.1173515e-3;
-d = 0.1263218e-5;
-e = 0.3025581e-8;
-f = 0.4683382e-2;
-g = 0.2286895e-3;
-h = 0.7469271e-6;
-i = 0.1727481e-8;
-
 %Electron rest mass
-m0 = 9.109e-31; %kg
+m0 = 9.10938291e-31; %kg
 
 %Bandgap in silicon at input temperature and at T = 0K
 [Eg] = Sze(T); %eV
@@ -32,28 +18,32 @@ m0 = 9.109e-31; %kg
 %Boltzmann constant
 k_B = 1.3806488e-23; %J/K
 
-%Calculate electron effective mass relative to electron rest mass
-% mem0 = (6^(2/3))*((((C*(Eg0/Eg))^2)*mlm0)^(1/3)); %dimensionless
-%Ref for the below calculations is Green JAP 1990
+%Calculate the electron thermal velocity effective mass (mtc* in Green JAP
+%1990)
 ml = 0.9163*m0;
 mtm0 = 0.1905*(Eg0/Eg); 
 mt = mtm0*m0; 
-delta = (ml-mt)/ml; 
+delta = sqrt((ml-mt)/ml); 
 me  = 4*ml/((1+(((ml/mt)^(1/2))*(asin(delta)/delta)))^2);
 
-%Calculate hole effective mass relative to electron rest mass
-mhm0 = ((a+(b*T)+(c*(T^2))+(d*(T^3))+(e*(T^4)))/(1+(f*T)+(g*(T^2))+(h*(T^3))+(i*(T^4))))^(2/3); %dimensionless
+%Calculate the hole thermal velocity effective mass (Table 4 in
+%10.1088/0022-3719/14/21/011)
+meth_v0= 0.3676;
+meth_v1= 0;
+meth_v2= 1.98738e-5;
+meth_v3= -2.588144e-7;
+meth_v4= 1.415372e-9;
+meth_v5= -3.919169e-12;
+meth_v6= 5.410849e-15;
+meth_v7= -2.959797e-18;
 
-%Calculate effective masses of electrons and holes
-% me = mem0*m0; %kg
-mh = mhm0*m0; %kg
+mh_th = meth_v0 + meth_v1*T + meth_v2*(T^2) + meth_v3*(T^3) + meth_v4*(T^4) + meth_v5*(T^5) + meth_v6*(T^6)+ meth_v7*(T^7); 
+mh = mh_th*m0; 
 
-% vth_e = sqrt((3*k_B*T)/(me)); %m/s, Ref Gang Chen, Nanoscale energy transport and conversion, pg. 214
-% vth_h = sqrt((3*k_B*T)/(mh)); %m/s, Ref Gang Chen, Nanoscale energy transport and conversion, pg. 214
-% 
+%Calculate the thermal velocities given the effective masses
 vth_e = sqrt((8*k_B*T)/(pi*me)); %m/s, Ref Green JAP 1990 equation 10
 vth_h = sqrt((8*k_B*T)/(pi*mh)); %m/s, Ref Green JAP 1990 equation 10
-%Convert to cm/s
+%Convert to cm/s which will be used in our other calculations
 vth_e = vth_e*100; %cm/s
 vth_h = vth_h*100; %cm/s
 
