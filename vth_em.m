@@ -47,6 +47,4 @@ vth_h = sqrt((8*k_B*T)/(pi*mh)); %m/s, Ref Green JAP 1990 equation 10
 vth_e = vth_e*100; %cm/s
 vth_h = vth_h*100; %cm/s
 
-
-
 end
