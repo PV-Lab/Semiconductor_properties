@@ -1,6 +1,7 @@
 %Model DRM effect as a function of temperature
 %Input parameters
-T = 300; 
+mobility_sum = 1600.31528425;
+T = 400; 
 doping = 1.5e16; %cm-3, bulk
 type = 'p'; %bulk
 emitter_doping = 1e18; %cm-3 
@@ -11,7 +12,7 @@ W = 0.0280; %cm, wafer thickness
 %constants
 q = 1.60217662e-19; %C
 %Boltzmann constant
-k_B = 8.61733238e-5; %eV/K
+k_B = 1.3806485279e-23; %J/K
 epsilon_r = 11.68; %no units, relative permittivity of silicon
 epsilon0 = 8.854187817e-12; %F/m
 epsilon0 = epsilon0/100; %F/cm
@@ -23,7 +24,7 @@ epsilon = epsilon_r*epsilon0;
 [Efi_bulk,Efv_bulk,p0_bulk,n0_bulk,Eiv_bulk] = adv_Model_gen(T,doping,type);
 [Efi_emitter,Efv_emitter,p0_emitter,n0_emitter,Eiv_emitter] = adv_Model_gen(T,emitter_doping,emitter_type);
 V_bi = abs(Efv_emitter-Efv_bulk); %eV
-% V_bi = V_bi/q; %V
+V_bi = (V_bi/8.617e-5)*(1.380e-23)/q; %V
 
 %What is the applied voltage?
 deltan = 1e15;
@@ -39,3 +40,18 @@ delta_lp0 = sqrt(V_bi)*sqrt((2*epsilon/q)*(emitter_doping/(doping*(doping+emitte
 %(conductance in the depletion region begins to dominant conductance from
 %excess carriers). 
 deltan_crossover = (doping*A_ratio/W)*delta_lp0; 
+
+deltan = logspace(10,15,500); 
+for i = 1:length(deltan)
+    VA(i) = (k_B*T/q)*log((deltan(i)+n0_bulk)/n0_bulk); 
+    delta_lp(i) = (sqrt(V_bi-VA(i))-sqrt(V_bi))*sqrt((2*epsilon/q)*(emitter_doping/(doping*(doping+emitter_doping)))); 
+    delta_sig_junc(i) = q*doping*mobility_sum*delta_lp(i)*A_ratio; 
+    delta_sig_carr(i) = deltan(i)*mobility_sum*q*W; 
+end
+figure;
+loglog(deltan,abs(delta_sig_junc),'.');
+hold all;
+loglog(deltan,delta_sig_carr,'.');
+xlabel('Excess carrier density [cm^-^3]'); 
+ylabel('Excess conductance [\Ohm^-^1]');
+legend('Junction','Carriers'); 
