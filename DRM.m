@@ -69,3 +69,14 @@ deltan = logspace(10,15,500);
 for i = 1:length(T)
     DRM_w_T(T(i),doping,type,emitter_doping,emitter_type,W,A_ratio,deltan)
 end
+%% Replicate Cousins
+clear all; close all; 
+doping = 1.5e16; 
+type = 'p'; 
+emitter_doping = 1e18; 
+emitter_type = 'n'; 
+A_ratio = 1; 
+W = 0.0280; 
+T = 300; 
+deltan = logspace(10,16,500); 
+DRM_w_T(T,doping,type,emitter_doping,emitter_type,W,A_ratio,deltan)
