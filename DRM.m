@@ -48,7 +48,6 @@ epsilon = epsilon_r*epsilon0;
 [Efi_bulk,Efv_bulk,p0_bulk,n0_bulk,Eiv_bulk] = adv_Model_gen(T,doping,type);
 [Efi_emitter,Efv_emitter,p0_emitter,n0_emitter,Eiv_emitter] = adv_Model_gen(T,emitter_doping,emitter_type);
 V_bi = abs(Efv_emitter-Efv_bulk); %eV
-V_bi = (V_bi/8.617e-5)*(1.380e-23)/q; %V
 
 %What is the applied voltage?
 deltan = 1e15;
@@ -79,3 +78,29 @@ loglog(deltan,delta_sig_carr,'.');
 xlabel('Excess carrier density [cm^-^3]'); 
 ylabel('Excess conductance [\Ohm^-^1]');
 legend('Junction','Carriers'); 
+
+%% 
+clear all; close all; 
+T = [300 350 400 450 500 550 600]; 
+doping = 1.5e16; %cm-3, bulk
+type = 'p'; %bulk
+emitter_doping = 1e19; %cm-3 
+emitter_type = 'n'; 
+A_ratio = 1; %ratio of junction area to illumination area
+W = 0.0280; %cm, wafer thickness
+deltan = logspace(10,15,500); 
+
+for i = 1:length(T)
+    DRM_w_T(T(i),doping,type,emitter_doping,emitter_type,W,A_ratio,deltan)
+end
+%% Replicate Cousins
+clear all; close all; 
+doping = 1.5e16; 
+type = 'p'; 
+emitter_doping = 1e18; 
+emitter_type = 'n'; 
+A_ratio = 1; 
+W = 0.0280; 
+T = 300; 
+deltan = logspace(10,16,500); 
+DRM_w_T(T,doping,type,emitter_doping,emitter_type,W,A_ratio,deltan)
