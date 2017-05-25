@@ -104,3 +104,19 @@ W = 0.0280;
 T = 300; 
 deltan = logspace(10,16,500); 
 DRM_w_T(T,doping,type,emitter_doping,emitter_type,W,A_ratio,deltan)
+%% Look as a function of doping level
+clear all; close all; 
+T = [300]; 
+doping = logspace(13,17,10); %cm-3, bulk
+type = 'p'; %bulk
+emitter_doping = 1e19; %cm-3 
+emitter_type = 'n'; 
+A_ratio = 1; %ratio of junction area to illumination area
+W = 0.0180; %cm, wafer thickness
+deltan = logspace(10,15,500); 
+
+for i = 1:length(doping)
+    DRM_w_T(T,doping(i),type,emitter_doping,emitter_type,W,A_ratio,deltan)
+end
+
+

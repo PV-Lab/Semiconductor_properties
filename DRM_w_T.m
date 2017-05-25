@@ -32,4 +32,4 @@ loglog(deltan,delta_sig_carr,'.');
 xlabel('Excess carrier density [cm^-^3]','FontSize',20); 
 ylabel('Excess conductance [\Omega^-^1]','FontSize',20);
 legend('Junction','Carriers'); 
-title(['T = ' num2str(T)],'FontSize',20);
+title(['T = ' num2str(T) ', N_d = 10^{' num2str(log10(doping)) '}'],'FontSize',20);
