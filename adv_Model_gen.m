@@ -34,7 +34,7 @@ SOFTWARE.
 %Additional outputs added - hole and electron equilibrium concentrations at
 %specified temperature.
 
-function [Efi,Efv,p0,n0,Eiv] = adv_Model_gen(T,N_dop,type)
+function [Efi,Efv,p0,n0,Eiv,ni2,Eg] = adv_Model_gen(T,N_dop,type)
 
 %Boltzmann constant
 k_B = 8.61733238e-5; %eV/K
